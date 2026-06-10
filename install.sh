@@ -50,8 +50,11 @@ log "Installing Python dependencies"
 "${VENV}/bin/pip" install -r "${APP_DIR}/requirements.txt"
 
 log "Building + installing the rgbmatrix Python bindings into the venv"
-make -C "${MATRIX_DIR}/bindings/python" build-python PYTHON="${VENV}/bin/python"
-make -C "${MATRIX_DIR}/bindings/python" install-python PYTHON="${VENV}/bin/python"
+# Cython is required to compile the bindings; install it into the venv we build with.
+"${VENV}/bin/pip" install Cython
+# build-python / install-python are TOP-LEVEL Makefile targets (not bindings/python).
+make -C "${MATRIX_DIR}" build-python PYTHON="${VENV}/bin/python"
+make -C "${MATRIX_DIR}" install-python PYTHON="${VENV}/bin/python"
 
 # --- 4. Generate display assets ---------------------------------------------
 log "Generating display assets"
