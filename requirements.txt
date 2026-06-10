@@ -1,0 +1,7 @@
+# cubs-hq runtime dependencies (keep this list minimal — Pi Zero W is 512 MB).
+# The rpi-rgb-led-matrix Python bindings are NOT here: they are built from
+# source by install.sh (there is no pip package).
+requests>=2.31
+Pillow>=10.0
+schedule>=1.2
+flask>=3.0

@@ -1,0 +1,18 @@
+# systemd unit template for cubs-hq.
+# install.sh substitutes __APP_DIR__ and __VENV__ and installs the result to
+# /etc/systemd/system/cubs-hq.service. The daemon runs as root for GPIO/DMA access.
+[Unit]
+Description=cubs-hq Cubs LED matrix daemon
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=__APP_DIR__
+ExecStart=__VENV__/bin/python -m cubshq.main
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Generated display assets (produced by prepare_assets.py)
+assets/w_flag_64x64.png
+assets/cubs_logo_64x64.png
+
+# Local rendered/installed unit (install.sh fills the template)
+cubs-hq.service
+
+# OS / editor
+.DS_Store
+._*
+.idea/
+.vscode/

@@ -1,0 +1,26 @@
+# Ruff configuration for cubs-hq.
+# Target the Pi's interpreter; keep the rule set practical for a small daemon.
+target-version = "py311"
+line-length = 100
+
+[lint]
+select = [
+    "E",    # pycodestyle errors
+    "F",    # pyflakes
+    "I",    # isort (import order)
+    "UP",   # pyupgrade (modern syntax)
+    "B",    # flake8-bugbear
+    "SIM",  # flake8-simplify
+    "ANN",  # flake8-annotations (type hints required)
+]
+ignore = [
+    "ANN101",  # missing type annotation for self
+    "ANN102",  # missing type annotation for cls
+]
+
+[lint.per-file-ignores]
+# The companion script runs on macOS, not the Pi, and shells out to AppleScript.
+"companion/*" = ["ANN"]
+
+[format]
+quote-style = "double"
