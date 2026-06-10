@@ -78,6 +78,16 @@ if [[ ! -f "${APP_DIR}/assets/cubs_logo_source.png" ]]; then
 fi
 "${VENV}/bin/python" "${APP_DIR}/prepare_assets.py"
 
+# --- 4b. Disable onboard audio ----------------------------------------------
+# The hzeller library times the display with the hardware PWM peripheral, which
+# the onboard sound module (snd_bcm2835) also claims. With audio enabled the
+# matrix initialises but stays dark, so disable it (blacklist + device tree).
+log "Disabling onboard audio (frees the PWM peripheral for the matrix)"
+echo "blacklist snd_bcm2835" > /etc/modprobe.d/cubshq-no-audio.conf
+for cfg in /boot/firmware/config.txt /boot/config.txt; do
+    [ -f "$cfg" ] && sed -i 's/^dtparam=audio=on/dtparam=audio=off/' "$cfg"
+done
+
 # --- 5. systemd service -----------------------------------------------------
 log "Installing ${SERVICE_NAME}"
 RENDERED="${APP_DIR}/${SERVICE_NAME}"
