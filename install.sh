@@ -23,10 +23,12 @@ fi
 log "Installing system packages"
 apt-get update
 apt-get install -y \
-    git build-essential \
+    git build-essential cmake ninja-build \
     python3 python3-dev python3-venv python3-pip \
     libgraphicsmagick++-dev libwebp-dev \
     fonts-dejavu-core          # provides DejaVuSans-Bold.ttf for the W glyph
+    # cmake + ninja: the rgbmatrix bindings build with scikit-build-core (CMake),
+    # and there are no reliable armv6 wheels for them, so install from apt.
 
 # --- 2. Build rpi-rgb-led-matrix (no pip package exists) ---------------------
 if [[ ! -d "${MATRIX_DIR}/.git" ]]; then
@@ -50,11 +52,11 @@ log "Installing Python dependencies"
 "${VENV}/bin/pip" install -r "${APP_DIR}/requirements.txt"
 
 log "Building + installing the rgbmatrix Python bindings into the venv"
-# Cython is required to compile the bindings; install it into the venv we build with.
-"${VENV}/bin/pip" install Cython
-# build-python / install-python are TOP-LEVEL Makefile targets (not bindings/python).
-make -C "${MATRIX_DIR}" build-python PYTHON="${VENV}/bin/python"
-make -C "${MATRIX_DIR}" install-python PYTHON="${VENV}/bin/python"
+# Current rpi-rgb-led-matrix builds its Python bindings with scikit-build-core
+# (CMake) via 'pip install .' from the repo root — the old `make build-python`
+# targets were removed. pip's build isolation pulls scikit-build-core + cython
+# automatically; cmake/ninja come from apt above.
+"${VENV}/bin/pip" install "${MATRIX_DIR}"
 
 # --- 4. Generate display assets ---------------------------------------------
 log "Generating display assets"
