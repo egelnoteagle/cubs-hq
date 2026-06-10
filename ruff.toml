@@ -13,10 +13,6 @@ select = [
     "SIM",  # flake8-simplify
     "ANN",  # flake8-annotations (type hints required)
 ]
-ignore = [
-    "ANN101",  # missing type annotation for self
-    "ANN102",  # missing type annotation for cls
-]
 
 [lint.per-file-ignores]
 # The companion script runs on macOS, not the Pi, and shells out to AppleScript.
