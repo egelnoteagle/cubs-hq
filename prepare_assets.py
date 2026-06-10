@@ -3,8 +3,9 @@
 
 Outputs (written to ``assets/``):
 
-* ``w_flag_64x64.png``  — built programmatically: solid Cubs-blue background with a
-  bold white "W" sized to fill the panel. No source image required.
+* ``w_flag_64x64.png``  — built programmatically: white background with a bold
+  Cubs-blue "W" sized to fill the panel (the Wrigley Field win flag). No source image
+  required.
 * ``cubs_logo_64x64.png`` — resized from ``assets/cubs_logo_source.png``,
   transparency preserved and composited onto black for clean LED rendering.
 
@@ -64,15 +65,15 @@ def _largest_fitting_font(
 
 
 def build_w_flag() -> None:
-    """Render the Cubs-blue W flag and write it to ``w_flag_64x64.png``."""
-    img = Image.new("RGB", (SIZE, SIZE), CUBS_BLUE)
+    """Render the Cubs win flag (white field, blue "W") and write ``w_flag_64x64.png``."""
+    img = Image.new("RGB", (SIZE, SIZE), WHITE)
     draw = ImageDraw.Draw(img)
 
     font_path = _find_bold_font()
     if font_path is None:
         # Last resort: Pillow's built-in bitmap font (small, but never crashes).
         font = ImageFont.load_default()
-        draw.text((SIZE // 2, SIZE // 2), "W", font=font, fill=WHITE, anchor="mm")
+        draw.text((SIZE // 2, SIZE // 2), "W", font=font, fill=CUBS_BLUE, anchor="mm")
         print("  WARNING: no bold TTF found; used Pillow's default bitmap font for the W.")
     else:
         # Leave a 2px breathing margin on every side.
@@ -80,7 +81,7 @@ def build_w_flag() -> None:
         ink_w, ink_h = right - left, bottom - top
         x = (SIZE - ink_w) // 2 - left
         y = (SIZE - ink_h) // 2 - top
-        draw.text((x, y), "W", font=font, fill=WHITE)
+        draw.text((x, y), "W", font=font, fill=CUBS_BLUE)
 
     img.save(W_FLAG_OUT)
     print(f"  wrote {W_FLAG_OUT.relative_to(ASSETS.parent)}")

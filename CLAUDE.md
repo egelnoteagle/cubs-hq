@@ -152,7 +152,7 @@ sudo bash install.sh        # builds rpi-rgb-led-matrix, creates venv, generates
 python3 prepare_assets.py   # regenerate w_flag_64x64.png and cubs_logo_64x64.png
 ```
 
-- `w_flag_64x64.png` is generated **programmatically** — Cubs blue (`#0E3386`) background, bold white "W" sized to fill the panel. No source image needed.
+- `w_flag_64x64.png` is generated **programmatically** — white background, bold Cubs-blue (`#0E3386`) "W" sized to fill the panel (the Wrigley Field win flag). No source image needed.
 - `cubs_logo_64x64.png` is resized from `assets/cubs_logo_source.png` (preserve transparency, composite onto black for LED rendering). Drop the source PNG in before running.
 
 ## Service management
