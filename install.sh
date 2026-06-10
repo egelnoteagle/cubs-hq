@@ -52,11 +52,22 @@ log "Installing Python dependencies"
 "${VENV}/bin/pip" install -r "${APP_DIR}/requirements.txt"
 
 log "Building + installing the rgbmatrix Python bindings into the venv"
-# Current rpi-rgb-led-matrix builds its Python bindings with scikit-build-core
-# (CMake) via 'pip install .' from the repo root — the old `make build-python`
-# targets were removed. pip's build isolation pulls scikit-build-core + cython
-# automatically; cmake/ninja come from apt above.
-"${VENV}/bin/pip" install "${MATRIX_DIR}"
+# The bindings include a pillow.c shim that needs Pillow's internal C headers
+# (Imaging.h), which are NOT shipped in binary wheels. Clone the matching Pillow
+# source and feed its libImaging dir to the compiler via CPATH.
+PILLOW_VERSION="$("${VENV}/bin/python" -c 'import PIL; print(PIL.__version__)')"
+PILLOW_SRC="/tmp/pillow-src"
+if [[ ! -d "${PILLOW_SRC}/src/libImaging" ]]; then
+    log "Cloning Pillow ${PILLOW_VERSION} source for internal C headers (Imaging.h)"
+    rm -rf "${PILLOW_SRC}"
+    git clone --depth 1 --branch "${PILLOW_VERSION}" \
+        https://github.com/python-pillow/Pillow.git "${PILLOW_SRC}"
+fi
+# Current rpi-rgb-led-matrix builds with scikit-build-core (CMake) via 'pip
+# install .'; build isolation pulls scikit-build-core + cython, cmake/ninja come
+# from apt above, and CPATH supplies Imaging.h to the pillow.c shim compile.
+CPATH="${PILLOW_SRC}/src/libImaging${CPATH:+:${CPATH}}" \
+    "${VENV}/bin/pip" install "${MATRIX_DIR}"
 
 # --- 4. Generate display assets ---------------------------------------------
 log "Generating display assets"
