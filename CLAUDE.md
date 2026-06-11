@@ -12,7 +12,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 A single systemd service (`cubs-hq.service`) runs the daemon as root. A standalone companion script runs on the Mac Mini to push Apple Music metadata to the Pi.
 
-> Status: scaffolding only. Application modules under `cubshq/` are intentionally stubs — implementation begins with `state.py` and `display.py`. `prepare_assets.py` is implemented.
+> Status: implemented end-to-end. All `cubshq/` modules, the three display modes, `main.py`, the Mac companion, and `install.sh` are complete and run on the hardware. Color order is `RBG` and onboard audio must stay disabled (both handled in code/install.sh).
 
 ## Hardware
 
