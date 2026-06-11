@@ -29,6 +29,7 @@ LED_CHAIN = 2
 PIXEL_MAPPER = "V-mapper"  # stack the 2-long chain into a 64x64 square
 GPIO_SLOWDOWN = 2  # required for Pi Zero W stability
 DEFAULT_BRIGHTNESS = 80  # 0–100
+LED_RGB_SEQUENCE = "RBG"  # these Waveshare panels wire green/blue swapped vs the RGB default
 
 BLACK = (0, 0, 0)
 
@@ -57,6 +58,7 @@ def _build_options(brightness: int) -> RGBMatrixOptions:
     options.pixel_mapper_config = PIXEL_MAPPER
     options.gpio_slowdown = GPIO_SLOWDOWN
     options.brightness = brightness
+    options.led_rgb_sequence = LED_RGB_SEQUENCE
     # The daemon runs as root for GPIO/DMA; don't let the library drop to
     # 'daemon' after init (it can break file/network access the daemon needs).
     options.drop_privileges = False
