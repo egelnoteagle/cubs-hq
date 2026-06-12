@@ -6,7 +6,7 @@ Cycles three screens on an IDLE_ROTATE_S (~10s) loop:
   C) the next Cubs game (date, CT time, opponent, probable pitchers)
 
 A screen is rebuilt only when the rotation changes or the data is stale, so the
-single-core Pi Zero W isn't re-rendering text every frame.
+Pi Zero 2 W isn't re-rendering text every frame.
 """
 
 from __future__ import annotations

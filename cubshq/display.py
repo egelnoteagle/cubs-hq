@@ -27,7 +27,7 @@ LED_ROWS = 32
 LED_COLS = 64
 LED_CHAIN = 2
 PIXEL_MAPPER = "V-mapper"  # stack the 2-long chain into a 64x64 square
-GPIO_SLOWDOWN = 2  # required for Pi Zero W stability
+GPIO_SLOWDOWN = 2  # Zero 2 W starting value; raise to 3 if flicker/ghosting
 DEFAULT_BRIGHTNESS = 80  # 0–100
 LED_RGB_SEQUENCE = "RBG"  # these Waveshare panels wire green/blue swapped vs the RGB default
 

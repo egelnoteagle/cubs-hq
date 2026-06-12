@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this project does
 
-`cubs-hq` is a Raspberry Pi Zero W daemon that drives a **64×64 RGB LED matrix** as a Chicago Cubs status display. It runs a small state machine that picks one of three display modes by priority:
+`cubs-hq` is a Raspberry Pi Zero 2 W daemon that drives a **64×64 RGB LED matrix** as a Chicago Cubs status display. It runs a small state machine that picks one of three display modes by priority:
 
 1. **Apple Music** — now-playing screen, mirrored live from a Mac Mini on the LAN (highest priority).
 2. **W Flag** — full-screen "W" flag when the Cubs have won today's game.
@@ -18,7 +18,7 @@ A single systemd service (`cubs-hq.service`) runs the daemon as root. A standalo
 
 | Component | Detail |
 |---|---|
-| SBC | Raspberry Pi Zero W **V1.1** — BCM2835, **ARMv6**, single-core 1 GHz, **512 MB RAM** |
+| SBC | Raspberry Pi **Zero 2 W** — BCM2710A1, quad-core ARM Cortex-A53 (ARMv8), 1 GHz, **512 MB RAM**; runs the **32-bit (armhf)** OS (built earlier on a Zero W — the binaries are forward-compatible, so no re-flash/rebuild was needed for the board swap) |
 | HAT | **Adafruit RGB Matrix Bonnet** (Zero form factor, *not* the HAT) |
 | Panels | 2× **Waveshare P2.5 64×32 HUB75**, stacked **vertically** → 64×64 logical |
 | Data wiring | Bonnet output → **panel 1 IN**; **panel 1 OUT → panel 2 IN** (daisy-chained) |
@@ -33,7 +33,7 @@ The two 64×32 panels are one chain of length 2, reshaped into a 64×64 square b
 ```
 
 - **Hardware mapping:** `adafruit-hat` (the Bonnet uses the same GPIO mapping as the Adafruit HAT). Set `options.hardware_mapping = "adafruit-hat"` in `display.py`.
-- **`gpio_slowdown = 2`** is required for Pi Zero W stability (the single 1 GHz core outruns the panels at slowdown 1 and flickers). Raise to 3 only if flicker persists.
+- **`gpio_slowdown = 2`** is the starting value for the Zero 2 W (a Pi-3-class board). If you see flicker / ghosting / color smearing, raise to `3`; the value trades refresh speed for signal-timing margin on faster Pis.
 - Logical coordinate space after mapping: `(0,0)` top-left → `(63,63)` bottom-right. Panel 1 is the top half (rows 0–31), panel 2 the bottom half (rows 32–63).
 - The Bonnet does **not** have the HAT's PWM-quality solder jumper. If you see image ghosting, that's expected to be tuned via `pwm_bits` / `pwm_lsb_nanoseconds`, not a jumper.
 
@@ -84,7 +84,7 @@ https://statsapi.mlb.com/api/v1/standings?leagueId=104&season=2026&standingsType
 https://statsapi.mlb.com/api/v1/schedule?sportId=1&teamId=112&startDate=TODAY&endDate=30_DAYS_OUT&hydrate=probablePitcher
 ```
 
-All MLB access lives in `cubshq/mlb.py`. Keep requests lean and cache responses in memory between ticks — the Pi Zero W is bandwidth- and CPU-constrained, and these endpoints rarely change within a polling interval.
+All MLB access lives in `cubshq/mlb.py`. Keep requests lean and cache responses in memory between ticks — the Pi has limited RAM and these endpoints rarely change within a polling interval.
 
 ### Apple Music — companion script protocol
 - `companion/apple_music_sender.py` runs on the **Mac Mini** (a script the user launches manually, *not* a service).
@@ -100,7 +100,7 @@ POST http://cubs-hq.local:5000/now-playing
 ## Constraints
 
 - **Python 3.11+**, type hints throughout, clean modern style.
-- **Minimal memory/CPU** — Pi Zero W is single-core, 512 MB. Avoid per-tick allocations of large images; pre-render and cache.
+- **Minimal memory/CPU** — the Zero 2 W has 512 MB RAM (quad-core A53). Avoid per-tick allocations of large images; pre-render and cache.
 - **`ruff`** for linting (config in `ruff.toml`).
 - All LED matrix operations go through the **`hzeller/rpi-rgb-led-matrix`** Python bindings, **built from source** by `install.sh` (there is no pip package).
 - The daemon runs as a **single systemd service** managing all modes.
@@ -171,7 +171,7 @@ sudo journalctl -u cubs-hq -f
 | `COMPANION_POLL_S` | `companion/apple_music_sender.py` | `2` | AppleScript now-playing poll interval |
 | `FLASK_PORT` | `main.py` | `5000` | Now-playing ingest port |
 | `options.hardware_mapping` | `display.py` | `"adafruit-hat"` | Bonnet uses the HAT mapping |
-| `options.gpio_slowdown` | `display.py` | `2` | Pi Zero W stability |
+| `options.gpio_slowdown` | `display.py` | `2` | Zero 2 W timing (raise to 3 if flicker) |
 | `options.brightness` | `display.py` | `80` | 0–100 |
 
 ## Development notes

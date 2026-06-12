@@ -1,6 +1,6 @@
 # cubs-hq
 
-A Raspberry Pi Zero W daemon that drives a **64×64 RGB LED matrix** as a Chicago Cubs status display.
+A Raspberry Pi Zero 2 W daemon that drives a **64×64 RGB LED matrix** as a Chicago Cubs status display.
 
 It runs a small state machine that shows one of three screens by priority:
 
@@ -10,7 +10,7 @@ It runs a small state machine that shows one of three screens by priority:
 
 ## Hardware
 
-- Raspberry Pi Zero W V1.1 (ARMv6, 512 MB)
+- Raspberry Pi Zero 2 W (quad-core ARMv8, 512 MB) — runs the 32-bit armhf OS
 - Adafruit RGB Matrix Bonnet (Zero form factor)
 - 2× Waveshare P2.5 64×32 HUB75 panels, stacked vertically → 64×64
 - Panels powered by their shared 5 V Y-cable; data daisy-chained Bonnet → panel 1 → panel 2

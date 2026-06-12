@@ -3,7 +3,7 @@
 Provides today's Cubs game, NL Central standings, and the next game with
 probable pitchers. Cubs teamId=112, NL Central divisionId=205, NL leagueId=104.
 GET responses are cached in memory with a short TTL so per-tick calls on the
-Pi Zero W stay cheap. Network/parse failures degrade to empty/None (logged),
+Pi Zero 2 W stay cheap. Network/parse failures degrade to empty/None (logged),
 never raising into the display loop.
 """
 
